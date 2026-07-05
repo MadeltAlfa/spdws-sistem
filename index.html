@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPDWS - Smart Public Drinking Water Station</title>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- ===================== LOGIN ===================== -->
+  <div id="login-screen" class="screen visible">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="logo-wrap"><i class="fa-solid fa-droplet"></i></div>
+        <h1>SPDWS</h1>
+        <p>Smart Public Drinking Water Station<br>Sistem Informasi Pengelolaan Air Publik</p>
+      </div>
+
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <span class="inp-icon"><i class="fa-solid fa-user"></i></span>
+          <input type="text" id="login-user" placeholder="Masukkan username" autocomplete="username">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="inp-icon"><i class="fa-solid fa-lock"></i></span>
+          <input type="password" id="login-pass" placeholder="Masukkan password" autocomplete="current-password">
+        </div>
+      </div>
+      <button class="login-btn" onclick="doLogin()"><i class="fa-solid fa-rocket"></i> Masuk ke Sistem</button>
+      <div class="login-error" id="login-err"><i class="fa-solid fa-triangle-exclamation"></i> Username atau password
+        salah.</div>
+
+      <div class="login-divider"></div>
+      <div class="login-hint">
+        <div class="login-hint-title"><i class="fa-solid fa-key"></i> Akun Demo</div>
+        <div class="login-hint-row">
+          <span class="role-badge badge-admin">ADMIN</span>
+          <span style="font-size:13px;color:var(--n700);font-weight:600;">Maheswari — Koordinator</span>
+          <span class="login-hint-cred">admin / admin123</span>
+        </div>
+        <div class="login-hint-row">
+          <span class="role-badge badge-user">USER</span>
+          <span style="font-size:13px;color:var(--n700);font-weight:600;">Pengguna Umum</span>
+          <span class="login-hint-cred">user / user123</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MONITOR UNIT ===================== -->
+  <div id="monitor-screen" class="screen">
+    <!-- Header -->
+    <div class="monitor-header">
+      <div class="mh-brand">
+        <div class="brand-icon"><i class="fa-solid fa-droplet"></i></div>
+        <div>
+          <div class="brand-name">SPDWS</div>
+          <div class="brand-sub">Smart Water Station</div>
+        </div>
+      </div>
+      <div class="mh-center">
+        <div class="mh-time" id="monitor-time">--:--:--</div>
+        <div class="mh-date" id="monitor-date">--</div>
+      </div>
+      <div class="mh-right">
+        <div class="conn-pill">
+          <div class="conn-dot"></div>IoT Online
+        </div>
+        <button class="mon-logout-btn" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>
+          Keluar</button>
+      </div>
+    </div>
+
+    <div class="monitor-body">
+
+      <!-- Status Hero -->
+      <div class="status-hero" id="status-hero">
+        <div class="status-label">Status Kondisi Air</div>
+        <div class="status-word s-aman" id="status-word">AMAN</div>
+        <div class="status-desc" id="status-desc">Air siap dikonsumsi · Semua komponen berfungsi normal</div>
+        <div class="status-pill">
+          <span><i class="fa-regular fa-clock"></i></span>
+          <span id="last-fill">Pengisian terakhir 5 menit lalu</span>
+        </div>
+      </div>
+
+      <!-- Volume + Sensor -->
+      <div class="mon-grid2">
+        <!-- Volume -->
+        <div class="glass-card">
+          <div class="gc-title"><span class="gc-title-icon"><i class="fa-solid fa-droplet"></i></span>Volume Air
+            Tersedia</div>
+          <div style="display:flex;align-items:baseline;gap:4px;">
+            <div class="vol-pct-big" id="vol-num">72</div>
+            <div class="vol-pct-unit">%</div>
+          </div>
+          <div class="vol-sub">Kapasitas tangki saat ini</div>
+          <div class="vol-track">
+            <div class="vol-fill" id="vol-fill" style="width:72%;background:linear-gradient(90deg,#0ea5e9,#38bdf8)">
+            </div>
+          </div>
+          <div class="vol-ticks">
+            <span class="vol-tick">0%</span><span class="vol-tick">25%</span>
+            <span class="vol-tick">50%</span><span class="vol-tick">75%</span>
+            <span class="vol-tick">100%</span>
+          </div>
+        </div>
+
+        <!-- Sensor -->
+        <div class="glass-card">
+          <div class="gc-title"><span class="gc-title-icon"><i class="fa-solid fa-microscope"></i></span>Kualitas Air
+            Real-time</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="sensor-card">
+              <div class="sensor-lbl">TDS</div>
+              <div class="sensor-val" id="tds-val" style="color:#0369a1">142</div>
+              <div class="sensor-unit">ppm</div>
+              <div class="sensor-status ss-ok" id="tds-status"><i class="fa-solid fa-check"></i> Aman</div>
+            </div>
+            <div class="sensor-card">
+              <div class="sensor-lbl">pH Level</div>
+              <div class="sensor-val" id="ph-val" style="color:#0369a1">7.2</div>
+              <div class="sensor-unit">level</div>
+              <div class="sensor-status ss-ok" id="ph-status"><i class="fa-solid fa-check"></i> Aman</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Komponen -->
+      <div class="mon-grid3">
+        <div class="komponen-card">
+          <div class="komp-icon"><i class="fa-solid fa-sun"></i></div>
+          <div class="komp-name">UV Sterilisasi</div>
+          <div class="komp-badge kb-ok"><i class="fa-solid fa-check"></i> AKTIF</div>
+        </div>
+        <div class="komponen-card">
+          <div class="komp-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+          <div class="komp-name">Sensor IR</div>
+          <div class="komp-badge kb-ok"><i class="fa-solid fa-check"></i> AKTIF</div>
+        </div>
+        <div class="komponen-card">
+          <div class="komp-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          <div class="komp-name">Filter Air</div>
+          <div class="komp-badge kb-ok"><i class="fa-solid fa-check"></i> AKTIF</div>
+        </div>
+      </div>
+
+      <!-- Counter + Guide -->
+      <div class="mon-grid2">
+        <div class="glass-card">
+          <div class="gc-title"><span class="gc-title-icon"><i class="fa-solid fa-chart-simple"></i></span>Penggunaan
+            Hari Ini</div>
+          <div class="counter-num" id="counter-num">248</div>
+          <div class="counter-sub">botol terisi</div>
+          <div class="counter-diff"><i class="fa-solid fa-arrow-up"></i> +32 vs kemarin (216)</div>
+          <div
+            style="margin-top:14px;padding:12px;background:var(--b50);border-radius:10px;border:1px solid var(--b100);">
+            <div style="font-size:11px;font-weight:700;color:var(--b700);margin-bottom:4px;"><i
+                class="fa-solid fa-recycle"></i> Plastik Dihemat</div>
+            <div style="font-size:22px;font-weight:900;color:var(--b600);">~248 botol</div>
+            <div style="font-size:11px;color:var(--n400);">plastik tidak terpakai</div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="gc-title"><span class="gc-title-icon"><i class="fa-solid fa-book-open"></i></span>Panduan
+            Penggunaan</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <div class="guide-step">
+              <div class="guide-num">1</div>
+              <div class="guide-ico"><i class="fa-solid fa-bottle-water"></i></div>
+              <div class="guide-text">Siapkan botol yang bersih</div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-num">2</div>
+              <div class="guide-ico"><i class="fa-solid fa-satellite-dish"></i></div>
+              <div class="guide-text">Dekatkan ke sensor IR</div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-num">3</div>
+              <div class="guide-ico"><i class="fa-solid fa-droplet"></i></div>
+              <div class="guide-text">Air mengalir otomatis</div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-num">4</div>
+              <div class="guide-ico"><i class="fa-solid fa-hand"></i></div>
+              <div class="guide-text">Angkat botol saat penuh</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PENGADUAN ===== -->
+      <div class="pengaduan-section">
+        <div class="pengaduan-header">
+          <div class="pengaduan-icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <div>
+            <div class="pengaduan-title">Pengaduan & Keluhan</div>
+            <div class="pengaduan-sub">Laporkan kerusakan atau masalah mesin kepada petugas kami</div>
+          </div>
+        </div>
+
+        <button class="pengaduan-toggle-btn" onclick="togglePengaduan()" id="peng-toggle-btn">
+          <span><i class="fa-solid fa-pen"></i></span> <span id="peng-btn-text">Buat Laporan Pengaduan</span>
+        </button>
+
+        <!-- Form Pengaduan -->
+        <div class="pengaduan-form" id="pengaduan-form">
+          <div class="peng-form-title"><i class="fa-solid fa-clipboard-list"></i> Form Laporan Pengaduan</div>
+
+          <!-- Kategori masalah -->
+          <div class="pf-row">
+            <label class="pf-label">Kategori Masalah</label>
+            <div class="kategori-chips" id="kat-chips">
+              <div class="kat-chip" onclick="selectKat(this,'Air tidak keluar')"><i class="fa-solid fa-droplet"></i> Air
+                Tidak Keluar</div>
+              <div class="kat-chip" onclick="selectKat(this,'Layar rusak')"><i class="fa-solid fa-desktop"></i> Layar
+                Rusak</div>
+              <div class="kat-chip" onclick="selectKat(this,'Air berbau/keruh')"><i
+                  class="fa-solid fa-triangle-exclamation"></i> Air Berbau/Keruh</div>
+              <div class="kat-chip" onclick="selectKat(this,'Sensor tidak respon')"><i
+                  class="fa-solid fa-satellite-dish"></i> Sensor Tidak Respon</div>
+              <div class="kat-chip" onclick="selectKat(this,'Mesin berbunyi aneh')"><i
+                  class="fa-solid fa-volume-high"></i> Bunyi Aneh</div>
+              <div class="kat-chip" onclick="selectKat(this,'Kebocoran air')"><i class="fa-solid fa-water"></i>
+                Kebocoran Air</div>
+              <div class="kat-chip" onclick="selectKat(this,'Kerusakan fisik')"><i class="fa-solid fa-wrench"></i>
+                Kerusakan Fisik</div>
+              <div class="kat-chip" onclick="selectKat(this,'Lainnya')"><i class="fa-solid fa-file-pen"></i> Lainnya
+              </div>
+            </div>
+          </div>
+
+          <!-- Deskripsi -->
+          <div class="pf-row">
+            <label class="pf-label">Deskripsi Masalah</label>
+            <textarea class="pf-textarea" id="peng-desc"
+              placeholder="Ceritakan masalah yang Anda temui secara detail..."></textarea>
+          </div>
+
+          <!-- Prioritas -->
+          <div class="pf-row">
+            <label class="pf-label">Tingkat Urgensi</label>
+            <div class="prio-btns">
+              <button class="prio-btn p-rendah" onclick="selectPrio(this)"><i class="fa-solid fa-circle"
+                  style="color:var(--g500)"></i> Rendah</button>
+              <button class="prio-btn p-sedang" onclick="selectPrio(this)"><i class="fa-solid fa-circle"
+                  style="color:var(--y500)"></i> Sedang</button>
+              <button class="prio-btn p-tinggi" onclick="selectPrio(this)"><i class="fa-solid fa-circle"
+                  style="color:var(--r500)"></i> Tinggi</button>
+            </div>
+          </div>
+
+          <!-- Kontak opsional -->
+          <div class="pf-row">
+            <label class="pf-label">Nomor Kontak (Opsional)</label>
+            <input class="pf-input" id="peng-kontak" type="tel" placeholder="0812-xxxx-xxxx (untuk tindak lanjut)">
+          </div>
+
+          <!-- Rating mesin -->
+          <div class="pf-row">
+            <label class="pf-label">Rating Kondisi Mesin Saat Ini</label>
+            <div class="star-row" id="star-row">
+              <span class="star" onclick="setStar(1)"><i class="fa-solid fa-star"></i></span>
+              <span class="star" onclick="setStar(2)"><i class="fa-solid fa-star"></i></span>
+              <span class="star" onclick="setStar(3)"><i class="fa-solid fa-star"></i></span>
+              <span class="star" onclick="setStar(4)"><i class="fa-solid fa-star"></i></span>
+              <span class="star" onclick="setStar(5)"><i class="fa-solid fa-star"></i></span>
+            </div>
+            <div style="font-size:12px;color:var(--n400);margin-top:6px;" id="star-label">Pilih rating bintang</div>
+          </div>
+
+          <button class="send-btn" onclick="submitPengaduan()">
+            <span><i class="fa-solid fa-paper-plane"></i></span> Kirim Laporan ke Petugas
+          </button>
+        </div>
+
+        <!-- History pengaduan -->
+        <div class="peng-history" id="peng-history" style="display:none;">
+          <div class="peng-history-title"><i class="fa-solid fa-clipboard-list"></i> Riwayat Pengaduan Anda</div>
+          <div id="peng-history-list"></div>
+        </div>
+      </div>
+
+    </div><!-- /monitor-body -->
+    <div class="monitor-wave"></div>
+
+    <!-- Ticker -->
+    <div class="ticker">
+      <div class="ticker-inner">
+        <span><i class="fa-regular fa-clock"></i> Pengisian terakhir: 5 menit lalu</span>
+        <span><i class="fa-solid fa-sun"></i> Siklus UV berikutnya: 14:30 WIB</span>
+        <span><i class="fa-solid fa-recycle"></i> Plastik dihemat hari ini: ~248 botol</span>
+        <span><i class="fa-solid fa-satellite-dish"></i> Status IoT: Terhubung — latensi 42ms</span>
+        <span><i class="fa-solid fa-droplet"></i> Total air terisi: 248 botol hari ini</span>
+        <span><i class="fa-solid fa-check"></i> Filter terakhir diganti: 12 hari lalu</span>
+        <span><i class="fa-solid fa-bullhorn"></i> Ada keluhan? Gunakan tombol Pengaduan di bawah</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ADMIN APP ===================== -->
+  <div id="admin-screen" class="screen">
+    <div class="sidebar">
+      <div class="sb-logo">
+        <div class="sb-logo-icon"><i class="fa-solid fa-droplet"></i></div>
+        <div>
+          <div class="sb-logo-text">SPDWS</div>
+          <div class="sb-logo-sub">Admin Panel</div>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <div class="nav-item active" onclick="showPage('dashboard',this)">
+          <span class="nav-icon"><i class="fa-solid fa-chart-simple"></i></span> Dashboard
+          <span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item" onclick="showPage('units',this)">
+          <span class="nav-icon"><i class="fa-solid fa-building"></i></span> Semua Unit
+        </div>
+        <div class="nav-item" onclick="showPage('schedule',this)">
+          <span class="nav-icon"><i class="fa-regular fa-calendar"></i></span> Jadwal Pengecekan
+        </div>
+        <div class="nav-item" onclick="showPage('form',this)">
+          <span class="nav-icon"><i class="fa-solid fa-clipboard-list"></i></span> Form Cek Fisik
+        </div>
+        <div class="nav-item" onclick="showPage('log',this)">
+          <span class="nav-icon"><i class="fa-regular fa-folder"></i></span> Log Maintenance
+        </div>
+        <div class="nav-item" onclick="showPage('pengaduan',this)" id="nav-pengaduan">
+          <span class="nav-icon"><i class="fa-solid fa-bullhorn"></i></span> Pengaduan User
+          <span class="nav-badge blue" id="peng-admin-badge">0</span>
+        </div>
+      </nav>
+      <div class="sb-profile">
+        <div class="profile-ava"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="profile-name" id="admin-name">Admin</div>
+          <div class="profile-role">Koordinator Teknis</div>
+        </div>
+        <button class="sb-logout" onclick="doLogout()">Keluar</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="pg-header">
+          <div class="pg-title">Dashboard</div>
+          <div class="pg-sub" id="dash-sub">Senin, 30 Juni 2025 · Pembaruan: baru saja</div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-ico sic-green"><i class="fa-solid fa-circle" style="color:var(--g500)"></i></div>
+            <div>
+              <div class="stat-val">8</div>
+              <div class="stat-lbl">Unit Aktif</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico sic-red"><i class="fa-solid fa-circle" style="color:var(--r500)"></i></div>
+            <div>
+              <div class="stat-val">3</div>
+              <div class="stat-lbl">Peringatan Aktif</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico sic-yellow"><i class="fa-regular fa-calendar"></i></div>
+            <div>
+              <div class="stat-val">5</div>
+              <div class="stat-lbl">Jadwal Hari Ini</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico sic-blue"><i class="fa-solid fa-droplet"></i></div>
+            <div>
+              <div class="stat-val">1.842</div>
+              <div class="stat-lbl">Penggunaan Minggu Ini</div>
+            </div>
+          </div>
+        </div>
+        <div class="sec-title"><i class="fa-solid fa-triangle-exclamation"></i> Peringatan Aktif</div>
+        <div class="alert-card urgent">
+          <div class="alert-ico"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          <div class="alert-body">
+            <div class="alert-title">SPDWS-03 — Filter Air Kritis</div>
+            <div class="alert-loc"><i class="fa-solid fa-location-dot"></i> Taman Kota Selatan, Blok C</div>
+            <div class="alert-desc">Efisiensi filter turun ke 12%. Perlu penggantian segera sebelum kualitas air tidak
+              memenuhi standar konsumsi.</div>
+            <div class="alert-dead"><i class="fa-regular fa-clock"></i> Batas waktu: Hari ini, 17:00</div>
+          </div>
+          <div class="alert-badge ab-urgent">URGENT</div>
+        </div>
+        <div class="alert-card urgent">
+          <div class="alert-ico"><i class="fa-solid fa-droplet"></i></div>
+          <div class="alert-body">
+            <div class="alert-title">SPDWS-07 — Volume Air Kritis</div>
+            <div class="alert-loc"><i class="fa-solid fa-location-dot"></i> Stasiun Bus Terminal A</div>
+            <div class="alert-desc">Volume air tersisa 8%. Estimasi habis dalam 2 jam pada jam sibuk pagi.</div>
+            <div class="alert-dead"><i class="fa-regular fa-clock"></i> Batas waktu: Hari ini, 10:00</div>
+          </div>
+          <div class="alert-badge ab-urgent">URGENT</div>
+        </div>
+        <div class="alert-card soon">
+          <div class="alert-ico"><i class="fa-solid fa-sun"></i></div>
+          <div class="alert-body">
+            <div class="alert-title">SPDWS-05 — Pengecekan Lampu UV</div>
+            <div class="alert-loc"><i class="fa-solid fa-location-dot"></i> Perpustakaan Daerah Lt. 1</div>
+            <div class="alert-desc">Lampu UV mendekati akhir masa pakai (estimasi tersisa 15 jam aktif). Jadwalkan
+              penggantian.</div>
+            <div class="alert-dead"><i class="fa-regular fa-clock"></i> Batas waktu: 2 Juli 2025</div>
+          </div>
+          <div class="alert-badge ab-soon">SEGERA</div>
+        </div>
+      </div>
+
+      <!-- SEMUA UNIT -->
+      <div class="page" id="page-units">
+        <div class="pg-header">
+          <div class="pg-title">Semua Unit</div>
+          <div class="pg-sub">10 unit terdaftar · 8 aktif · 1 peringatan · 1 offline</div>
+        </div>
+        <div class="unit-grid" id="unit-grid"></div>
+      </div>
+
+      <!-- JADWAL -->
+      <div class="page" id="page-schedule">
+        <div class="pg-header">
+          <div class="pg-title">Jadwal Pengecekan</div>
+          <div class="pg-sub">Senin, 30 Juni 2025 · 5 tugas hari ini</div>
+        </div>
+        <div class="sched-list" id="sched-list"></div>
+      </div>
+
+      <!-- FORM CEK FISIK -->
+      <div class="page" id="page-form">
+        <div class="pg-header">
+          <div class="pg-title">Form Cek Fisik</div>
+          <div class="pg-sub">Isi laporan kondisi unit setelah pengecekan lapangan</div>
+        </div>
+        <div class="form-card">
+          <div class="a-form-row">
+            <label class="a-form-lbl">Pilih Unit</label>
+            <select class="a-form-select" id="form-unit">
+              <option value="">— Pilih Unit —</option>
+              <option>SPDWS-01 · Alun-alun Kota</option>
+              <option>SPDWS-02 · Mall Pusat</option>
+              <option>SPDWS-03 · Taman Kota Selatan</option>
+              <option>SPDWS-04 · Kampus UII</option>
+              <option>SPDWS-05 · Perpustakaan Daerah</option>
+              <option>SPDWS-06 · Puskesmas Utara</option>
+              <option>SPDWS-07 · Stasiun Bus Terminal A</option>
+              <option>SPDWS-08 · Taman Bermain Barat</option>
+              <option>SPDWS-09 · Pasar Tradisional</option>
+              <option>SPDWS-10 · Kantor Kecamatan</option>
+            </select>
+          </div>
+          <div class="a-form-row">
+            <label class="a-form-lbl">Checklist Kondisi Komponen</label>
+            <div class="checklist">
+              <div class="check-row">
+                <div class="check-lbl"><i class="fa-solid fa-screwdriver-wrench"></i> Filter Air</div>
+                <div class="check-btns"><button class="ck-btn" onclick="setCheck(this,'ok')"><i
+                      class="fa-solid fa-check"></i> OK</button><button class="ck-btn" onclick="setCheck(this,'bad')"><i
+                      class="fa-solid fa-xmark"></i> Masalah</button></div>
+              </div>
+              <div class="check-row">
+                <div class="check-lbl"><i class="fa-solid fa-sun"></i> Lampu UV Sterilisasi</div>
+                <div class="check-btns"><button class="ck-btn" onclick="setCheck(this,'ok')"><i
+                      class="fa-solid fa-check"></i> OK</button><button class="ck-btn" onclick="setCheck(this,'bad')"><i
+                      class="fa-solid fa-xmark"></i> Masalah</button></div>
+              </div>
+              <div class="check-row">
+                <div class="check-lbl"><i class="fa-solid fa-satellite-dish"></i> Sensor IR</div>
+                <div class="check-btns"><button class="ck-btn" onclick="setCheck(this,'ok')"><i
+                      class="fa-solid fa-check"></i> OK</button><button class="ck-btn" onclick="setCheck(this,'bad')"><i
+                      class="fa-solid fa-xmark"></i> Masalah</button></div>
+              </div>
+              <div class="check-row">
+                <div class="check-lbl"><i class="fa-solid fa-droplet"></i> Aliran Air</div>
+                <div class="check-btns"><button class="ck-btn" onclick="setCheck(this,'ok')"><i
+                      class="fa-solid fa-check"></i> OK</button><button class="ck-btn" onclick="setCheck(this,'bad')"><i
+                      class="fa-solid fa-xmark"></i> Masalah</button></div>
+              </div>
+              <div class="check-row">
+                <div class="check-lbl"><i class="fa-solid fa-desktop"></i> Layar LCD</div>
+                <div class="check-btns"><button class="ck-btn" onclick="setCheck(this,'ok')"><i
+                      class="fa-solid fa-check"></i> OK</button><button class="ck-btn" onclick="setCheck(this,'bad')"><i
+                      class="fa-solid fa-xmark"></i> Masalah</button></div>
+              </div>
+              <div class="check-row">
+                <div class="check-lbl"><i class="fa-solid fa-building"></i> Kondisi Fisik Unit</div>
+                <div class="check-btns"><button class="ck-btn" onclick="setCheck(this,'ok')"><i
+                      class="fa-solid fa-check"></i> OK</button><button class="ck-btn" onclick="setCheck(this,'bad')"><i
+                      class="fa-solid fa-xmark"></i> Masalah</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="a-form-row">
+            <label class="a-form-lbl">Catatan Tambahan</label>
+            <textarea class="a-form-select" id="form-notes" style="resize:vertical;min-height:90px;"
+              placeholder="Tulis catatan atau temuan khusus..."></textarea>
+          </div>
+          <button class="a-save-btn" onclick="saveForm()"><span><i class="fa-solid fa-floppy-disk"></i></span> Simpan
+            Laporan</button>
+        </div>
+      </div>
+
+      <!-- LOG MAINTENANCE -->
+      <div class="page" id="page-log">
+        <div class="pg-header">
+          <div class="pg-title">Log Maintenance</div>
+          <div class="pg-sub">Riwayat seluruh kegiatan perawatan unit</div>
+        </div>
+        <div class="table-filters">
+          <select class="tbl-filter" id="log-filter-unit" onchange="renderLog()">
+            <option value="">Semua Unit</option>
+            <option>SPDWS-01</option>
+            <option>SPDWS-02</option>
+            <option>SPDWS-03</option>
+            <option>SPDWS-04</option>
+            <option>SPDWS-05</option>
+            <option>SPDWS-06</option>
+            <option>SPDWS-07</option>
+            <option>SPDWS-08</option>
+            <option>SPDWS-09</option>
+            <option>SPDWS-10</option>
+          </select>
+          <select class="tbl-filter" id="log-filter-status" onchange="renderLog()">
+            <option value="">Semua Status</option>
+            <option>Selesai</option>
+            <option>Terjadwal</option>
+            <option>Ditunda</option>
+          </select>
+        </div>
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Tanggal & Waktu</th>
+              <th>ID Unit</th>
+              <th>Jenis Pekerjaan</th>
+              <th>Petugas</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="log-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- PENGADUAN USER (ADMIN VIEW) -->
+      <div class="page" id="page-pengaduan">
+        <div class="pg-header">
+          <div class="pg-title">Pengaduan Pengguna</div>
+          <div class="pg-sub" id="peng-admin-sub">Laporan keluhan dari pengguna mesin SPDWS</div>
+        </div>
+        <div class="table-filters">
+          <select class="tbl-filter" id="peng-filter-prio" onchange="renderPengaduanAdmin()">
+            <option value="">Semua Prioritas</option>
+            <option>Tinggi</option>
+            <option>Sedang</option>
+            <option>Rendah</option>
+          </select>
+          <select class="tbl-filter" id="peng-filter-status" onchange="renderPengaduanAdmin()">
+            <option value="">Semua Status</option>
+            <option>Baru</option>
+            <option>Diproses</option>
+            <option>Selesai</option>
+          </select>
+        </div>
+        <div id="peng-admin-list"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>
