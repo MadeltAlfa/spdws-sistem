@@ -217,6 +217,23 @@ function showPage(name, el) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   el.classList.add('active');
+  
+  // Auto-close sidebar on mobile if open
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.querySelector('.sidebar-backdrop');
+  if (sidebar && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('visible');
+  }
+}
+
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.querySelector('.sidebar-backdrop');
+  if (sidebar) {
+    sidebar.classList.toggle('open');
+    backdrop.classList.toggle('visible');
+  }
 }
 
 /* ============================================================

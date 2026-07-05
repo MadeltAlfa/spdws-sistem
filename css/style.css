@@ -695,6 +695,9 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--n100); colo
   .mon-grid4  { grid-template-columns:repeat(2,1fr); }
 }
 
+.sidebar-backdrop { display: none; }
+.admin-mobile-header { display: none; }
+
 /* Mobile Responsive */
 @media(max-width: 600px) {
   .stats-row { grid-template-columns: 1fr; }
@@ -704,10 +707,42 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--n100); colo
   .mon-grid4 { grid-template-columns: 1fr; }
   
   #admin-screen { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; position: relative; }
-  .main-content { margin-left: 0; padding: 15px; }
-  .sb-nav { flex-direction: row; flex-wrap: wrap; overflow-x: auto; gap: 8px; }
-  .nav-item { font-size: 12px; padding: 8px; }
+  
+  .sidebar-backdrop {
+    display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+    z-index: 990; backdrop-filter: blur(2px);
+  }
+  .sidebar-backdrop.visible { display: block; }
+  
+  .sidebar {
+    width: 260px; height: 100vh; position: fixed; top: 0; left: -260px;
+    z-index: 1000; border-bottom: none;
+    transition: left 0.3s ease;
+  }
+  .sidebar.open { left: 0; }
+  
+  .sb-nav { flex-direction: column; flex-wrap: nowrap; overflow-x: hidden; gap: 6px; }
+  .nav-item { font-size: 13px; padding: 14px 16px; }
+  
+  .main-content { margin-left: 0; padding: 20px; }
+  
+  .admin-mobile-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; padding: 16px 20px; border-bottom: 1px solid var(--n200);
+    margin: -20px -20px 20px -20px; position: sticky; top: 0; z-index: 50;
+  }
+  .amh-brand { display: flex; align-items: center; gap: 10px; }
+  .amh-brand .sb-logo-icon {
+    width: 36px; height: 36px; background: linear-gradient(135deg,#0ea5e9,#0284c7);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: white;
+  }
+  .amh-brand .sb-logo-text { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 900; font-size: 18px; color: var(--n800); }
+  
+  .mobile-menu-btn {
+    background: transparent; border: 1px solid var(--n300); padding: 8px 12px;
+    border-radius: var(--radius-sm); font-size: 16px; cursor: pointer; color: var(--n700);
+  }
   
   .login-box { width: 90%; max-width: 400px; padding: 30px 20px; }
   .monitor-header { flex-direction: column; gap: 10px; height: auto; padding: 15px; }
